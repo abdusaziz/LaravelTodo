@@ -1,0 +1,27 @@
+body {
+    background: linear-gradient(#c89c9e, #4f2742);
+    min-height: 100vh;
+}
+
+  .form-holder{
+    margin-top:60%;
+  }
+
+  .shadow {
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+table tr td:nth-child(3){
+  width: 15%;
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.modal-header{
+  background: black;
+  color: white;
+}
+.modal-title span{
+  color: white;
+}
