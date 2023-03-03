@@ -22,7 +22,7 @@ class TodoController extends Controller
             $query->where('status', 1);
         }])
         ->where('user_id', Auth::user()->id)
-        ->paginate(5); 
+        ->paginate(10); 
 
         return view("Todo.index", compact('todos'));
     }
