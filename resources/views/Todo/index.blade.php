@@ -38,7 +38,7 @@
 
             <table class="table table-striped table-dark shadow col-12">
                 <tr>
-                    <th>ID</th>
+                    <th>SL</th>
                     <th>Name</th>
                     <th>Task Remain</th>
                     <th>Completion %</th>
@@ -54,7 +54,7 @@
 
                 @forelse ($todos as $key => $todo)
                     <tr>
-                        <td><a class="badge badge-light" href="x"> {{ $counter }}</a></td>
+                        <td><span class="badge badge-light"> {{ $counter }}</span></td>
                         <td>{{ $todo->name }}</td>
                         <td>{{ $todo->remaining_count }}</td>
                         <td>

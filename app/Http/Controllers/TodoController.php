@@ -57,7 +57,7 @@ class TodoController extends Controller
     // Task list of a Todo item
     public function show(Todo $todo)                            
     {
-        $tasks = Task::orderBy('status', 'desc')->where('todo_id', $todo->id)->paginate(5);         
+        $tasks = Task::where('todo_id', $todo->id)->paginate(5);         
         return view('Todo.show', compact(['tasks', 'todo']));
     }
 

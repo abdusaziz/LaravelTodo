@@ -48,7 +48,7 @@
 
             <table class="table table-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>SL</th>
                     <th>Task name</th>
                     <th class="col-sm-4">Task Description</th>
                     <th>Status</th>
@@ -64,7 +64,7 @@
 
                 @forelse ($tasks as $key => $task)
                     <tr class="{{ $task->id }}">
-                        <td><a class="badge badge-light" href="x"> {{ $counter }}</a></td>
+                        <td><span class="badge badge-light"> {{ $counter }}</span></td>
                         <td>{{ $task->name }}</td>
                         <td>{{ $task->description }}</td>
                         <td class="{{ $task->status }}">
