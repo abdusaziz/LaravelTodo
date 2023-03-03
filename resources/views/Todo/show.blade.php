@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="input-group my-3">
+    <div class="input-group">
         {{-- Page title --}}
         <div class="alert table-dark col-sm-12 text-center" role="alert">
             <h4 class="alert bg-black text-white">Task List of <span class="text-warning">{{ $todo->name }}</span></h4>

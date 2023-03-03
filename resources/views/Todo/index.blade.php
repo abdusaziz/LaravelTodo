@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="input-group my-3 row">
+    <div class="input-group row">
         {{-- Page title --}}
         <div class="alert table-dark col-sm-12 text-center" role="alert">
             <h4 class="alert bg-black text-white">Page : <span class="text-warning">Todo List</span></h4>
