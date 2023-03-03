@@ -8,7 +8,7 @@
 
         {{-- Create new Todo button --}}
         <div class="col">
-            <button class="btn btn-success newtodo" type="button" data-toggle="modal" data-target="#todoModal"> 
+            <button class="btn btn-success newtodo mb-2" type="button" data-toggle="modal" data-target="#todoModal"> 
                 Create New &rarr;
             </button>
         </div>

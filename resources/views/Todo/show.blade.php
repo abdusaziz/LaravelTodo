@@ -8,7 +8,7 @@
 
         {{-- Create new Task button --}}
         <div class="col">
-            <button class="btn btn-success newtask" type="button" data-toggle="modal" data-target="#createEditModal">
+            <button class="btn btn-success newtask mb-2" type="button" data-toggle="modal" data-target="#createEditModal">
                 Create New &rarr;
             </button>
         </div>
