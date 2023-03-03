@@ -25,3 +25,8 @@ table tr td:nth-child(3){
 .modal-title span{
   color: white;
 }
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: white;
+  background-color: black;
+}

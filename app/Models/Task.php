@@ -15,6 +15,8 @@ class Task extends Model
         'todo_id',
         'status'
     ];
+
+    // OneToOne Relationship with Todo model
     public function todo()
     {
         return $this->belongsTo(todo::class);

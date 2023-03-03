@@ -42,6 +42,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // OneToOne Relationship with Todo model
     protected function Todo(){
         return $this->hasOne(Todo::class);
     }

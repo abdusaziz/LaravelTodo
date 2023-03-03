@@ -16,10 +16,13 @@ class Todo extends Model
         'user_id'
     ];
 
+    // OneToOne Relationship with User model
     public function User()
     {
         return $this->belongsTo(User::class);
     }
+
+    // OneToOne Relationship with Task model
     public function task()
     {
         return $this->hasOne(Task::class);

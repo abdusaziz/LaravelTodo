@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
-    public function index()
+
+    // Todo list page
+    public function index()                                     
     {
         $todos = Todo::withCount('task')
         ->withCount(['task as remaining_count' => function ($query) {
@@ -25,17 +27,17 @@ class TodoController extends Controller
         return view("Todo.index", compact('todos'));
     }
 
-    public function create()
-    {
-        return view('Todo.create');
-    }
 
-    public function store(Request $request)
+
+    // store new Todo item
+    public function store(Request $request)                     
     {
+        // Form data Validation
         $request->validate([
             "name"  =>  "required|min:3|max:20|unique:todos,name,null,null,user_id," . Auth::user()->id
         ]);
 
+        // query to Insert form data to Todo table
         $query = Todo::create([
             "name"  =>  $request->name,
             "user_id"   =>  Auth::user()->id
@@ -46,37 +48,41 @@ class TodoController extends Controller
         } else {
             $message = "New Todo not Created";
         }
+
         return redirect()->back()->with('message', 'Task created successfully.');
-       // return redirect()->route('todo.index')->with('message', $message);
     }
 
-    public function show(Todo $todo)
+
+
+    // Task list of a Todo item
+    public function show(Todo $todo)                            
     {
-        $tasks = Task::orderBy('status', 'desc')->where('todo_id', $todo->id)->paginate(5);;
-         
+        $tasks = Task::orderBy('status', 'desc')->where('todo_id', $todo->id)->paginate(5);         
         return view('Todo.show', compact(['tasks', 'todo']));
     }
 
-    public function edit(Todo $todo)
-    {
-        //
-    }
 
-    public function update(Request $request, Todo $todo)
-    {
-       
+
+    // Rename a Task
+    public function update(Request $request, Todo $todo)        
+    {       
+        // Form data Validation
         $request->validate([
             "name" => "required|min:3|max:20|unique:todos,name," . $todo->id . ",id,user_id," . Auth::user()->id
         ]);
 
+        // query to Update form data to Todos table
         $todo->update([
             "name"  =>  $request->name,
             "user_id"   =>  Auth::user()->id
         ]);
-        return redirect()->route('todo.index')->with('success', 'Name updated successfully');
+        return redirect()->route('todo.index')->with('message', 'Name updated successfully');
     }
 
-    public function destroy(Todo $todo)
+
+
+    // Delete Todo item
+    public function destroy(Todo $todo)                         
     {
         $todo->delete();
         return redirect()->route('todo.index')->with('message', 'Todo item deleted successfully.');

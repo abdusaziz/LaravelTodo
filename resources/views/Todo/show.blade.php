@@ -1,100 +1,124 @@
 @extends('layouts.app')
-@section('contents')
+@section('content')
     <div class="input-group my-3">
+        {{-- Page title --}}
         <div class="alert table-dark col-sm-12 text-center" role="alert">
-            <h4 class="alert-heading">Task List of <span class="text-warning">{{ $todo->name }}</span></h4>
+            <h4 class="alert bg-black text-white">Task List of <span class="text-warning">{{ $todo->name }}</span></h4>
         </div>
 
+        {{-- Create new Task button --}}
         <div class="col">
-            <button class="btn btn-success newtask" type="button" data-toggle="modal" data-target="#exampleModal"> Create New
-                &rarr;</button>
+            <button class="btn btn-success newtask" type="button" data-toggle="modal" data-target="#createEditModal">
+                Create New &rarr;
+            </button>
         </div>
+
+        {{-- Success or error message show area --}}
         <div class="input-group-append col">
+            
             @if (Session('message'))
-                <div class="btn alert-success">
+                <div class="alert alert-success d-flex align-items-center" role="alert">
                     {{ session('message') }}
                 </div>
             @endif
 
-
-
             @error('name')
-                <div class="btn alert-danger">
+                <div class="alert alert-danger">
                     <span class="text-danger"> Error:{{ $message }}</span>
                 </div>
             @enderror
+
             @error('description')
-                <div class="btn alert-danger">
+                <div class="alert alert-danger">
                     <span class="text-danger"> Error:{{ $message }}</span>
                 </div>
             @enderror
 
         </div>
-        <div class="col">
-            <a href="{{ route('todo.index') }}" class="btn btn-success newtodo">&larr; Back</a>
+
+        {{-- Back button --}}
+        <div class="col text-end">
+            <a href="{{ route('todo.index') }}" class="btn btn-success tx-auto newtodo">&larr; Back</a>
         </div>
     </div>
 
-    <!-- form card login -->
+    {{-- Table area start --}}
     <div class="row">
-    <div class="col-12">
+        <div class="col-12">
 
-        <table class="table table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Task name</th>
-                <th class="col-sm-4">Task Description</th>
-                <th>Status</th>
-                <th>View</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-
-            @forelse ($tasks as $key => $task)
-                <tr class="{{ $task->id }}">
-                    <td><a class="badge badge-light" href="x"> {{ $key + 1 }}</a></td>
-                    <td>{{ $task->name }}</td>
-                    <td>{{ $task->description }}</td>
-                    <td class="{{ $task->status }}">
-                        @if ($task->status == 1)
-                             Complete
-                        @else
-                            <span class="text-danger"> Pending</span>
-                        @endif
-                    </td>
-
-                    <td>
-                        <button class="btn btn-success edit" type="button" data-toggle="modal" data-target="#exampleModal">Edit</button>
-                    </td>
-                    <td>
-                        <button class="btn btn-success view" type="button" data-toggle="modal" data-target="#exampleModal2">View</button>
-                    </td>
-                    <td>
-                        <form action="{{ route('task.destroy', $task->id) }}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
+            <table class="table table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Task name</th>
+                    <th class="col-sm-4">Task Description</th>
+                    <th>Status</th>
+                    <th>View</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
-            @empty
-            @endforelse
-        </table>
-    </div>
-    </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                {{-- Table data looping start --}}
+                @php
+                    $counter = ($tasks->currentPage() - 1) * $tasks->perPage() + 1;
+                @endphp
+
+                @forelse ($tasks as $key => $task)
+                    <tr class="{{ $task->id }}">
+                        <td><a class="badge badge-light" href="x"> {{ $counter }}</a></td>
+                        <td>{{ $task->name }}</td>
+                        <td>{{ $task->description }}</td>
+                        <td class="{{ $task->status }}">
+                            @if ($task->status == 1)
+                            <span class="text-white">Complete</span>
+                            @else
+                                <span class="text-danger"> Pending</span>
+                            @endif
+                        </td>
+
+                        <td>
+                            <button class="btn btn-success edit" type="button" data-toggle="modal"
+                                data-target="#createEditModal">Edit</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary view" type="button" data-toggle="modal"
+                                data-target="#viewModal">View</button>
+                        </td>
+                        <td>
+                            <form action="{{ route('task.destroy', $task->id) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    @php
+                        $counter++;
+                    @endphp
+
+                @empty
+                <tr><td colspan="7" class="text-warning">No Data Found</td></tr>
+                @endforelse
+            </table>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        {{ $tasks->links('vendor.pagination.bootstrap-4') }}
+    </div>
+    {{-- Table area end --}}
+
+    <!-- Create or Edit Modal Start -->
+    <div class="modal fade" id="createEditModal" tabindex="-1" aria-labelledby="createEditModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Task Form</h5>
+                    <h5 class="modal-title" id="createEditModalLabel">Task Form</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form autocomplete="off" class="form" id="formLogin" action="{{ route('task.store') }}"
+                    <form autocomplete="off" class="form" id="formCreateEdit" action="{{ route('task.store') }}"
                         method="POST" role="form">
                         @csrf
                         <input type="hidden" name="todo_id" value="{{ $todo->id }}">
@@ -127,18 +151,18 @@
         </div>
     </div>
 
-    <!-- Modal 2 -->
-    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal Show -->
+    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalTaskname" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel2">Task: <span class="yellowText">Todo Form</span></h5>
+                    <h5 class="modal-title" id="viewModalTaskname">Task: <span class="yellowText">Todo Form</span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <span id="modalDescription"></span>
+                    <span id="viewModalDescription"></span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
@@ -146,49 +170,41 @@
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-center">
-        {{ $tasks->links('vendor.pagination.bootstrap-4') }}
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous">
-    </script>
+    
     <script>
+        // View task modal
         $(".view").click(function() {
-            
             var parent = $(this).parent().closest('tr');
-            
-            $('#exampleModalLabel2').text("Task:"+ parent.find("td:eq(1)").text());
-            $('#modalDescription').text(parent.find("td:eq(2)").text());
-            $('#description').val(parent.find("td:eq(2)").text());
-            $("#select").val(parent.find("td:eq(3)").attr('class')).change();
-            $("#name").after(putMethod);
-            $('#formLogin').attr('action', '{{ route('task.store') }}' + '/' + task_id);
+
+            $('#viewModalTaskname').text("Task:" + parent.find("td:eq(1)").text());
+            $('#viewModalDescription').text(parent.find("td:eq(2)").text());
         });
+        
+        // Edit task modal
         $(".edit").click(function() {
             var putMethod = "<input type='hidden' name='_method' value='put' id='InpMethod' />";
             var parent = $(this).parent().closest('tr');
             var task_id = parent.attr('class');
 
-            $('#exampleModalLabel').text("Edit Task");
+            $('#createEditModalLabel').text("Edit Task");
             $('#name').val(parent.find("td:eq(1)").text());
             $('#description').val(parent.find("td:eq(2)").text());
             $("#select").val(parent.find("td:eq(3)").attr('class')).change();
             $("#name").after(putMethod);
-            $('#formLogin').attr('action', '{{ route('task.store') }}' + '/' + task_id);
+            $('#formCreateEdit').attr('action', '{{ route('task.store') }}' + '/' + task_id);
         });
+
+        // Create new task modal
         $(".newtask").click(function() {
             var dataId = $(this).data("id");
             var dataName = $(this).data("name");
-            $('#exampleModalLabel').text("Create New Task");
+
+            $('#createEditModalLabel').text("Create New Task");
             $('#InpMethod').remove();
             $('#name').val('');
             $('#description').val('');
             $("#select").val(0).change();
-            $('#formLogin').attr('action', '{{ route('task.store') }}');
+            $('#formCreateEdit').attr('action', '{{ route('task.store') }}');
         });
     </script>
 @endsection
